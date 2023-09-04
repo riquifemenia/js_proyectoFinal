@@ -1,0 +1,68 @@
+.pie {
+    height: auto;
+    background-color: map-get($color, $key: 3);
+    font-size: $fuente-grande;
+}
+
+.pie--elemento {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2rem;
+}
+
+.pie--boton {
+    height: 4rem;
+    width: 30rem;
+    color: map-get($color, $key: 3);
+    background-color: map-get($color, $key: 1);
+    border-color: map-get($color, $key: 1);
+    border-radius: 1.6rem;
+
+    &:hover {
+        color: map-get($color, $key: 3);
+        background-color: map-get($color, $key: 2);
+        border-color: map-get($color, $key: 2);
+    }
+}
+
+.pie--logo {
+    display: flex;
+    align-items: center;
+    height: 6rem;
+}
+
+.pie--link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2rem;
+    font-size: 2rem;
+    color: map-get($color, $key: 1);
+    text-decoration: underline;
+
+    @include tablet {
+        justify-content: center;
+        font-size: 1.2rem;
+        color: map-get($color, $key: 2);
+        text-decoration: none;
+    }
+}
+
+.pie--disclaimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    background-color: map-get($color, $key: 1);
+    color: map-get($color, $key: 3);
+    padding: 1rem;
+}
+
+.pie--disclaimer--texto {
+    text-align: center;
+
+    p {
+        margin-bottom: 0;
+    }
+}

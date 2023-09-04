@@ -1,0 +1,220 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: $fuente-principal;
+    background-color: map-get($color, $key: 3);
+}
+
+header {
+    height: 0rem;
+    width: 100%;
+    z-index: 1;
+    background-color: transparent;
+}
+
+footer {
+    height: 14rem;
+    width: 100%;
+    z-index: 1;
+    border-top: 1px solid map-get($color, $key: 6);
+    padding-top: 4rem;
+}
+
+h1 {
+    font-size: 4.5em;
+    text-align: center;
+}
+
+h3 {
+    font-size: 2.4em;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+img {
+    max-width: 100%;
+}
+
+.navbar {
+    font-size: $fuente-mediana;
+    color: map-get($color, $key: 1);
+}
+
+.nav-link {
+    &.active {
+        color: map-get($color, $key: 3) !important;
+        /*se agrega important para sobreescribir clase de bootstrap*/
+        font-weight: bolder;
+        font-size: $fuente-mediana*1.3;
+    }
+
+    &.disabled {
+        color: map-get($color, $key: 5);
+    }
+}
+
+.navbar-toggler-icon {
+    background-image: none !important;
+    background-color: map-get($color, $key: 1);
+    height: 3px;
+    width: 30px;
+    margin: 10px 0;
+    position: relative;
+    transform-origin: center;
+
+    &::before {
+        display: block;
+        background-color: map-get($color, $key: 1);
+        height: 3px;
+        content: "";
+        position: relative;
+        top: -9px;
+        transform-origin: center;
+    }
+
+    &::after {
+        display: block;
+        background-color: map-get($color, $key: 1);
+        height: 3px;
+        content: "";
+        position: relative;
+        top: 6px;
+        transform-origin: center;
+    }
+}
+
+.menu {
+    background-color: #11111198;
+
+    li {
+        display: inline;
+        margin-right: 2.5rem;
+        width: 100%;
+
+        a {
+            padding: 0.5rem;
+            text-decoration: none;
+            color: map-get($color, $key: 3);
+
+            &:hover {
+                text-decoration: none;
+                color: map-get($color, $key: 6);
+                transition: all 1s;
+            }
+        }
+    }
+}
+
+.logo {
+    height: 3.5rem;
+    margin-top: 1rem;
+    margin-left: 2rem;
+}
+
+.boton {
+    height: 4rem;
+    width: 9rem;
+    border-radius: 1.6rem;
+}
+
+.boton--ir {
+    @extend .boton;
+    border-color: map-get($color, $key: 6);
+    background-color: map-get($color, $key: 3);
+
+    &:hover {
+        border-color: map-get($color, $key: 6);
+        background-color: map-get($color, $key: 4);
+    }
+}
+
+.secciones {
+    height: auto;
+    font-style: normal;
+    font-weight: 50;
+    font-size: 10px;
+    text-align: center;
+    background-color: map-get($color, $key: 3);
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+    @include tablet {
+        height: auto;
+    }
+}
+
+.secciones__inicio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 95vh;
+    font-style: normal;
+    font-weight: 50;
+    font-size: 10px;
+    text-align: center;
+    color: map-get($color, $key: 1);
+}
+
+.secciones__inicio--texto {
+    font-size: $fuente-grande;
+    color: map-get($color, $key: 2);
+}
+
+.secciones--contenido {
+    font-size: $fuente-chica;
+    color: map-get($color, $key: 1);
+}
+
+.secciones--contenido--imagenes {
+    display: flex;
+    justify-content: center;
+    height: 30rem;
+
+    @include tablet {
+        justify-content: left;
+    }
+}
+
+.secciones--contenido--imagen {
+    height: 30rem;
+
+    &:hover {
+        transform: scale(1.03);
+    }
+}
+
+.secciones--contenido--texto {
+    height: auto;
+    font-style: normal;
+    font-weight: 50;
+    font-size: 10px;
+    text-align: center;
+    padding-bottom: 10rem;
+}
+
+.fuente--grande {
+    font-size: $fuente-grande;
+}
+
+.fuente--mediana {
+    font-size: $fuente-mediana;
+}
+
+.fuente--chica {
+    font-size: $fuente-chica;
+}
+
+.fuente--muy-chica {
+    font-size: $fuente-muy-chica;
+}

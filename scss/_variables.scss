@@ -1,0 +1,30 @@
+$fuente-principal: 'Poppins', sans-serif;
+
+$fuente-grande: 2.5rem;
+$fuente-mediana: 0.65*$fuente-grande;
+$fuente-chica: 0.55*$fuente-grande;
+$fuente-muy-chica: 0.40*$fuente-grande;
+
+@mixin tablet {
+    @media screen and (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media screen and (min-width: 992px) {
+        @content;
+    }
+}
+
+/*Paleta: https://coolors.co/f0f0f0-e9e9e9-cfccdb-a495b7*/
+
+$color: (
+    1:#000000,
+    2:#777777,
+    3:#F0F0F0,
+    4:#E9E9E9,
+    5:#CFCCDB,
+    6:#A495B7,
+    7:#F8E28C
+);

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Clínica del oeste - Comprometidos con la atención de calidad - Siempre a tu lado">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css"
+        integrity="sha512-EaaldggZt4DPKMYBa143vxXQqLq5LE29DG/0OoVenoyxDrAScYrcYcHIuxYO9YNTIQMgD8c8gIUU8FQw7WpXSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <title>Clínica del oeste - Inicio</title>
+    <link rel="icon" type="image/png" href="../assets/img/icono.png">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="container-fluid m-2">
+                <a class="navbar-brand animate__animated animate__fadeIn" aria-current="page" href="#"><img class="logo"
+                        src="../assets/img/logo-blanco.png" alt="Logo"></a>
+                <button class="navbar-toggler mt-3 me-3" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end menu" tabindex="-1" id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <img class="logo" src="../assets/img/logo-blanco.png" alt="Logo">
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-5">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            </li>
+                            <hr>
+                            <li class="nav-item">
+                                <a href="../pages/turnos.html">Turnos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Guardia</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Especialidades</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Equipo humano</a>
+                            </li>
+                            <hr>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Contacto</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="principal" class="principal">
+        <div id="principal__titulo" class="container-fluid principal__titulo">
+            <div class="row wow animate__animated animate__pulse">
+                <h1>Siempre a tu lado</h1>
+            </div>
+        </div>
+    </main>
+
+    <section id="principal__turnos" class="container-fluid secciones">
+        <div class="row align-items-center secciones--contenido">
+            <div class="col-6 offset-3 col-md-3 offset-md-2 order-2 order-md-1">
+                <div class="row fuente--grande">
+                    <p>Turnos</p>
+                </div>
+                <div class="row">
+                    <div class="col-10 offset-1 col-md-6 offset-md-3">
+                        <button onclick="location.href='pages/turnos.html'" type="button"
+                            class="btn boton--ir">Ir</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-md-1 order-1 order-md-2 my-5">
+                <div class="secciones--contenido--imagenes">
+                    <a><img class="secciones--contenido--imagen" src="assets/img/turnos.webp" alt="Imagen turnos"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principal__guardia" class="container-fluid secciones">
+        <div class="row align-items-center secciones--contenido">
+            <div class="col-6 offset-3 col-md-3 offset-md-2 order-2 order-md-1">
+                <div class="row fuente--grande">
+                    <p>Guardia</p>
+                </div>
+                <div class="row">
+                    <div class="col-10 offset-1 col-md-6 offset-md-3">
+                        <button type="button" class="btn boton--ir" disabled>Ir</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-md-1 order-1 order-md-2 my-5">
+                <div class="secciones--contenido--imagenes">
+                    <a><img class="secciones--contenido--imagen" src="assets/img/guardia.webp" alt="Imagen equipo"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principal__especialidades" class="container-fluid secciones">
+        <div class="row align-items-center secciones--contenido">
+            <div class="col-6 offset-3 col-md-3 offset-md-2 order-2 order-md-1">
+                <div class="row fuente--grande">
+                    <p>Especialidades</p>
+                </div>
+                <div class="row">
+                    <div class="col-10 offset-1 col-md-6 offset-md-3">
+                        <button type="button" class="btn boton--ir" disabled>Ir</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-md-1 order-1 order-md-2 my-5">
+                <div class="secciones--contenido--imagenes">
+                    <a><img class="secciones--contenido--imagen" src="assets/img/especialidades.webp"
+                            alt="Imagen equipo"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principal__humano" class="container-fluid secciones">
+        <div class="row align-items-center secciones--contenido">
+            <div class="col-6 offset-3 col-md-3 offset-md-2 order-2 order-md-1">
+                <div class="row fuente--grande">
+                    <p>Equipo humano</p>
+                </div>
+                <div class="row">
+                    <div class="col-10 offset-1 col-md-6 offset-md-3">
+                        <button type="button" class="btn boton--ir" disabled>Ir</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-md-1 order-1 order-md-2 my-5">
+                <div class="secciones--contenido--imagenes">
+                    <a><img class="secciones--contenido--imagen" src="assets/img/humano.webp" alt="Imagen equipo"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principal__contacto" class="container-fluid secciones">
+        <div class="row align-items-center secciones--contenido">
+            <div class="col-6 offset-3 col-md-3 offset-md-2 order-2 order-md-1">
+                <div class="row fuente--grande">
+                    <p>Contacto</p>
+                </div>
+                <div class="row">
+                    <div class="col-10 offset-1 col-md-6 offset-md-3">
+                        <button type="button" class="btn boton--ir" disabled>Ir</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 offset-md-1 order-1 order-md-2 my-5">
+                <div class="secciones--contenido--imagenes">
+                    <a><img class="secciones--contenido--imagen" src="assets/img/contacto.webp" alt="Imagen equipo"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="principal__pie" class="container-fluid pie wow animate__animated animate__fadeIn">
+
+        <div class="row">
+            <div class="col-12 col-md-2 offset-md-4 col-lg-3 offset-lg-3 order-1 order-lg-1 pie--elemento">
+                <button type="button" class="btn pie--boton">Suscribirse al Newsletter</button>
+            </div>
+
+            <div class="col-12 col-md-2 col-lg-3 order-2 order-md-3 pie--elemento">
+                <button type="button" class="btn pie--boton">¿Cómo llegar?</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a class="nav-link" aria-current="page" href="#">Home</a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a class="nav-link" href="../pages/turnos.html">Turnos</a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a>Guardia</a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a>Especialidades</a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a>Equipo humano</a>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 pie--link">
+                        <a>Contacto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="pie--disclaimer">
+                <div class="col-10 offset-1 pie--disclaimer--texto">
+                    <p>2023 - Versión con fines educativos.</p>
+                    <p>Sitio basado en imágenes y colores existentes en un proyecto previo.</p>
+                    <p>Las marcas y logotipos no son reales. Imágenes de Racool_studio en Freepik</p>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+</body>
+
+</html>

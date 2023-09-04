@@ -1,0 +1,32 @@
+.turnos--ayuda {
+    font-family: 'Arial', sans-serif;
+    background-color: black;
+    height: 40rem;
+    text-align: left;
+    font-weight: 40;
+    font-size: $fuente-muy-chica;
+    color: map-get($color, $key: 7);
+    overflow-y: scroll;
+
+
+    @include tablet {
+        height: 35rem;
+    }
+
+    @include desktop {
+        height: 30rem;
+    }
+}
+
+.turnos--label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.turnos--input {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    width: 100%;
+}
