@@ -5,3 +5,51 @@
 .animate__animated.animate__pulse {
     --animate-duration: 3s;
 }
+
+.swal__custom-button {
+    height: 4rem !important;
+    width: 9rem !important;
+    border-radius: 1.6rem !important;
+    background-color: map-get($color, $key: 3) !important;
+    color: black !important;
+    border: 1px solid map-get($color, $key: 6) !important;
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &:hover {
+        background-color: map-get($color, $key: 4) !important;
+    }
+}
+
+.swal__custom-button2 {
+    height: 4rem !important;
+    width: 9rem !important;
+    border-radius: 1.6rem !important;
+    background-color: map-get($color, $key: 5) !important;
+    color: black !important;
+    border: 1px solid map-get($color, $key: 6) !important;
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &:hover {
+        background-color: map-get($color, $key: 4) !important;
+    }
+}
+
+.toast__custom {
+    background: map-get($color, $key: 6) !important;
+    opacity: 0.9 !important;
+    width: 300px;
+    font-size: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    color: map-get($color, $key: 3);
+    padding: 10px;
+}

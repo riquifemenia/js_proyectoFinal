@@ -19,11 +19,13 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css">
 
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
     <title>Clínica del oeste - Inicio</title>
-    <link rel="icon" type="image/png" href="../assets/img/icono.png">
+    <link rel="icon" type="image/png" href="assets/img/icono.png">
 </head>
 
 <body>
@@ -32,7 +34,7 @@
         <nav class="navbar">
             <div class="container-fluid m-2">
                 <a class="navbar-brand animate__animated animate__fadeIn" aria-current="page" href="#"><img class="logo"
-                        src="../assets/img/logo-blanco.png" alt="Logo"></a>
+                        src="assets/img/logo-blanco.png" alt="Logo"></a>
                 <button class="navbar-toggler mt-3 me-3" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
@@ -40,7 +42,7 @@
                 <div class="offcanvas offcanvas-end menu" tabindex="-1" id="offcanvasNavbar"
                     aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
-                        <img class="logo" src="../assets/img/logo-blanco.png" alt="Logo">
+                        <img class="logo" src="assets/img/logo-blanco.png" alt="Logo">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
@@ -50,7 +52,7 @@
                             </li>
                             <hr>
                             <li class="nav-item">
-                                <a href="../pages/turnos.html">Turnos</a>
+                                <a href="pages/turnos.html">Turnos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link disabled" href="#">Guardia</a>
@@ -201,7 +203,7 @@
                         <a class="nav-link" aria-current="page" href="#">Home</a>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 pie--link">
-                        <a class="nav-link" href="../pages/turnos.html">Turnos</a>
+                        <a class="nav-link" href="pages/turnos.html">Turnos</a>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 pie--link">
                         <a>Guardia</a>
@@ -239,6 +241,9 @@
     <script>
         new WOW().init();
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 
 </html>

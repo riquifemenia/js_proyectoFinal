@@ -17,69 +17,10 @@
 
 import Utilidades from './utilidades.js'
 import JsonManager from './jsonManager.js'
-import LogManager from './logManager.js'
+import LogAlertManager from './logAlertManager.js'
+import Paciente from './paciente.js'
 
 //---CLASES---//    
-
-class Configuracion {
-
-    inicio = async () => {
-        // Ocultar formulario de turnos
-        domManager.ocultarElemento(formDatos)
-        domManager.ocultarElemento(formTurno)
-        domManager.ocultarElemento(reservarBtn)
-        domManager.ocultarElemento(registrarPacienteBtn)
-        domManager.ocultarElemento(cancelarPacienteBtn)
-        logManager.addLog('Inicio de la aplicación')
-
-        try {
-            // Obtener datos y guardar en el localStorage
-            datos = await jsonManager.obtenerDatos()
-            jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
-            domManager.actualizarAyuda('Datos leídos de archivo JSON y cargados el localStore')
-
-            // Mostrar los pacientes registrados en el cuadro de ayuda
-            const pacientesExistentes = datos.pacientes.map(paciente => paciente.documento).join(', ')
-            domManager.actualizarAyuda(`Nota para pruebas: pacientes ya registrados: ${pacientesExistentes}`)
-        } catch (error) {
-            console.error('Error al obtener los datos:', error)
-        }
-    }
-
-
-    reinicio = async () => {
-        // Ocultar formulario de turnos
-        domManager.ocultarElemento(formDatos)
-        domManager.ocultarElemento(formTurno)
-        domManager.ocultarElemento(reservarBtn)
-        domManager.ocultarElemento(registrarPacienteBtn)
-        domManager.ocultarElemento(cancelarPacienteBtn)
-
-        // Restablecer campos y elementos del formulario
-        domManager.numeroDocumento.value = ''
-        domManager.especialidadesSelect.selectedIndex = 0
-        domManager.medicosSelect.selectedIndex = 0
-        domManager.horariosSelect.selectedIndex = 0
-        domManager.medicosSelect.disabled = true
-        domManager.horariosSelect.disabled = true
-        domManager.reservarBtn.disabled = true
-        domManager.registrarPacienteBtn.disabled = true
-        domManager.mostrarElemento(numeroDocumento)
-        domManager.mostrarElemento(ingresarBtn)
-
-        try {
-            // Leer datos desde el localStorage
-            datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
-            domManager.actualizarAyuda('Datos leídos desde localStore')
-
-            // Mostrar los pacientes registrados
-            const pacientesExistentes = datos.pacientes.map(paciente => paciente.documento).join(', ')
-            domManager.actualizarAyuda(`Nota para pruebas: pacientes ya registrados: ${pacientesExistentes}`)
-        } catch (error) {
-            console.error('Error al obtener los datos:', error)
-        }
-    }
-}
 
 class DomManager {
     constructor() {
@@ -92,7 +33,7 @@ class DomManager {
         this.reservarBtn = document.getElementById("reservarBtn")
         this.cancelarPacienteBtn = document.getElementById("cancelarPacienteBtn")
         this.registrarPacienteBtn = document.getElementById("registrarPacienteBtn")
-        this.ayuda = document.getElementById("ayudaTexto")
+        this.cancelarTurnoBtn = document.getElementById("cancelarTurnoBtn")
         this.formDatos = document.getElementById('formDatos')
 
         //Eventos
@@ -101,20 +42,77 @@ class DomManager {
         this.medicosSelect.addEventListener("change", this.actualizarHorarios.bind(this))
         this.horariosSelect.addEventListener("change", this.habilitarReserva.bind(this))
         this.reservarBtn.addEventListener("click", this.confirmarReserva.bind(this))
-        this.cancelarPacienteBtn.addEventListener("click", this.cancelarPaciente.bind(this))
+        this.cancelarPacienteBtn.addEventListener("click", this.cancelar.bind(this))
         this.registrarPacienteBtn.addEventListener("click", this.registrarPaciente.bind(this))
-
-        // Habilitar o deshabilitar el botón "Registrar" si están los datos del paciente completos
-        this.formDatos.addEventListener('input', () => {
-            if (this.verificarDatosCompletos()) {
-                registrarPacienteBtn.removeAttribute('disabled');
-            } else {
-                registrarPacienteBtn.setAttribute('disabled', 'true');
-            }
-        })
+        this.cancelarTurnoBtn.addEventListener("click", this.cancelar.bind(this))
+        this.formDatos.addEventListener("input", this.habilitarBotonRegistrarPaciente.bind(this))
     }
 
-    //Actualizar DOM según eventos (*4)
+    inicio = async () => {
+        // Ocultar formulario de turnos
+        this.ocultarElemento(formDatos)
+        this.ocultarElemento(formTurno)
+        this.ocultarElemento(reservarBtn)
+        this.ocultarElemento(registrarPacienteBtn)
+        this.ocultarElemento(cancelarPacienteBtn)
+        this.ocultarElemento(cancelarTurnoBtn)
+        logAlertManager.agregarLog('Inicio de la aplicación')
+
+        try {
+            // Obtener datos y guardar en el localStorage
+            datos = await jsonManager.obtenerDatos()
+            await jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
+            logAlertManager.agregarLog('Datos leídos de archivo JSON y cargados el localStore')
+
+            // Mostrar los pacientes registrados en el cuadro de ayuda
+            const pacientesExistentes = datos.pacientes.map(paciente => paciente.documento).join(', ')
+            logAlertManager.alertConsejo(`AVISO PARA PRUEBAS:\nDNI de pacientes ya registrados: ${pacientesExistentes}`)
+
+        } catch (error) {
+            await logAlertManager.alertError(`${error.message}`)
+            window.location.href = '../index.html'
+        }
+    }
+
+    reinicio = async () => {
+        // Ocultar formulario de turnos
+        this.ocultarElemento(formDatos)
+        this.ocultarElemento(formTurno)
+        this.ocultarElemento(reservarBtn)
+        this.ocultarElemento(registrarPacienteBtn)
+        this.ocultarElemento(cancelarPacienteBtn)
+        this.ocultarElemento(cancelarTurnoBtn)
+
+        // Restablecer campos y elementos del formulario
+        this.numeroDocumento.value = ''
+        this.especialidadesSelect.selectedIndex = 0
+        this.medicosSelect.selectedIndex = 0
+        this.horariosSelect.selectedIndex = 0
+        this.medicosSelect.disabled = true
+        this.horariosSelect.disabled = true
+        this.reservarBtn.disabled = true
+        this.registrarPacienteBtn.disabled = true
+        this.mostrarElemento(numeroDocumento)
+        this.mostrarElemento(ingresarBtn)
+
+        logAlertManager.agregarLog('Reinicio de la aplicación')
+
+        try {
+            // Leer datos desde el localStorage
+            datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
+            logAlertManager.agregarLog('Datos leídos desde localStore')
+
+            // Mostrar los pacientes registrados en el cuadro de ayuda
+            const pacientesExistentes = datos.pacientes.map(paciente => paciente.documento).join(', ')
+            logAlertManager.alertConsejo(`AVISO PARA PRUEBAS:\nDNI de pacientes ya registrados: ${pacientesExistentes}`)
+
+        } catch (error) {
+            this.logAlertManager.alertError(`${error.message}`)
+            window.location.href = '../index.html'
+        }
+    }
+
+    // Inicio al presionar el botón "Ingresar"
     iniciarTurnos = async () => {
         const documento = this.numeroDocumento.value
         this.ocultarElemento(this.numeroDocumento)
@@ -124,56 +122,18 @@ class DomManager {
         turno.inicioTurnos(documento)
     }
 
-    actualizarMedicos = async () => {
-        const especialidadSeleccionada = this.especialidadesSelect.value
-        const medicosOptions = this.generarOpcionesMedicos(especialidadSeleccionada)
-        this.medicosSelect.innerHTML = medicosOptions
-        this.medicosSelect.disabled = false
-    }
-
-    actualizarHorarios = async () => {
-        const medicoSeleccionado = this.medicosSelect.value
-        const horariosOptions = this.generarOpcionesHorarios(medicoSeleccionado)
-        this.horariosSelect.innerHTML = horariosOptions
-        this.horariosSelect.disabled = false
-    }
-
-    habilitarReserva = async () => {
-        this.reservarBtn.disabled = false
-    }
-
-
-    confirmarReserva = async () => {
-        //tomar datos del DOM
-        const especialidad = this.especialidadesSelect.selectedOptions[0].textContent
-        const medico = this.medicosSelect.selectedOptions[0].textContent
-        const horario = this.horariosSelect.selectedOptions[0].textContent
-        const textoConfirma = `
-        Estás por solicitar un turno para:
-        Especialiad: ${especialidad}
-        Médico: ${medico}
-        Fecha y hora: ${horario}
-
-        ¿Estás seguro?`
-        const confirmacion = confirm(textoConfirma)
-
-        if (confirmacion) {
-            //Utilizar la instancia de la clase turnos con los datos ingresados
-            turno.solicitarTurno(this.medicosSelect.value, this.horariosSelect.value)
-        } else {
-            alert('Turno no confirmado. Puedes seleccionar otro turno si lo deseas.')
-        }
-
-        domManager.borrarInputs(formDatos)
-    }
-
+    //Tomar datos ya registrados del paciente y los muestra
     generarFormulario(paciente) {
-        //Tomar datos ya registrados del paciente y los muestra
         document.getElementById("nombre").value = paciente.nombre
         document.getElementById("apellido").value = paciente.apellido
         document.getElementById("fechaNacimiento").value = paciente.fechaNacimiento
         document.getElementById("documento").value = paciente.documento
         document.getElementById("obraSocial").value = paciente.obraSocial
+
+        domManager.ocultarElemento(registrarPacienteBtn)
+        domManager.mostrarElemento(formTurno)
+        domManager.mostrarElemento(reservarBtn)
+        domManager.mostrarElemento(cancelarTurnoBtn)
 
         this.generarOpcionesEspecialidades()
     }
@@ -193,80 +153,137 @@ class DomManager {
         this.especialidadesSelect.innerHTML = especialidadesOptions
     }
 
-
-    //Formar select de médicos según la especialidad seleccionada
-    generarOpcionesMedicos = (especialidadSeleccionada) => {
+    // Actualiza lista de medicos de acuerdo a la especialidad seleccionada
+    actualizarMedicos = async () => {
+        const especialidadSeleccionada = this.especialidadesSelect.value
         const medicosOptions = datos.medicos
             .filter(medico => medico.especialidad === especialidadSeleccionada)
             .map(medico => `<option value="${medico.id}">${medico.nombre} ${medico.apellido}</option>`)
             .join('')
 
-        return '<option value="" disabled selected>Seleccioná un médico</option>' + medicosOptions
+        this.medicosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un médico</option>' + medicosOptions
+        this.medicosSelect.disabled = false
     }
 
-    //Formar select de horarios según el médico seleccionado
-    generarOpcionesHorarios = (idMedico) => {
-        if (idMedico in datos.turnosDisponibles) {
-            const listaDeTurnos = datos.turnosDisponibles[idMedico]
+    // Actualiza lista de horarios de acuerdo al medico seleccionado
+    actualizarHorarios = async () => {
+        const medicoSeleccionado = this.medicosSelect.value;
+
+        if (medicoSeleccionado in datos.turnosDisponibles) {
+            const listaDeTurnos = datos.turnosDisponibles[medicoSeleccionado]
             const horariosOptions = listaDeTurnos
                 .filter(turno => turno.disponible)
                 .map(turno => `<option value="${turno.id}">${utilidades.darFormatoFecha(turno.fecha)} ${turno.hora}</option>`)
-                .join('')
+                .join('');
 
-            return ('<option value="" disabled selected>Seleccioná un horario</option>' + horariosOptions)
+            this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>' + horariosOptions;
+            this.horariosSelect.disabled = false
         } else {
             alert(`El médico seleccionado no tiene actualmente turnos disponibles`)
-            return '<option value="" disabled selected>Seleccioná un horario</option>'
+            this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>'
+            this.horariosSelect.disabled = true;
+        }
+    }
+
+    // Habilitar o deshabilitar el botón "Reservar" si están los datos del turno completos
+    habilitarReserva = async () => {
+        this.reservarBtn.disabled = false
+    }
+
+    // Confirmar reserva de turno
+    confirmarReserva = async () => {
+        //tomar datos del DOM
+        const especialidad = this.especialidadesSelect.selectedOptions[0].textContent
+        const medico = this.medicosSelect.selectedOptions[0].textContent
+        const horario = this.horariosSelect.selectedOptions[0].textContent
+        const textoConfirma = `
+        <p>Estás por solicitar un turno para:<p>
+        Especialiad: ${especialidad}<br>
+        Médico: ${medico}<br>
+        Fecha y hora: ${horario}`
+
+        let resultado = await logAlertManager.alertConfirmacion(textoConfirma)
+
+        if (resultado.isConfirmed) {
+            let confirmado = await turno.solicitarTurno(this.medicosSelect.value, this.horariosSelect.value)
+            if (confirmado) {
+                await logAlertManager.alertMensaje('¡Turno confirmado con éxito!')
+                logAlertManager.agregarLog(`Turno confirmado con éxito`)
+                domManager.reinicio()
+            }
+        } else if (resultado.isDismissed) {
+            await logAlertManager.alertCancel('Turno no confirmado. Puedes seleccionar otro turno si lo deseas.')
+            this.reinicio()
+        }
+    }
+
+    habilitarRegistroPaciente = (documento) => {
+        this.habilitarInputs(this.formDatos)
+        this.mostrarElemento(this.formDatos)
+        this.mostrarElemento(this.cancelarPacienteBtn)
+        this.mostrarElemento(this.registrarPacienteBtn)
+        document.getElementById("documento").value = documento
+        this.deshabilitarElemento(document.getElementById("documento"))
+        this.registrarPacienteBtn.disabled = true
+    }
+
+    // Habilitar o deshabilitar el botón "Registrar" si están los datos del paciente completos
+    habilitarBotonRegistrarPaciente() {
+        if (this.verificarDatosCompletos()) {
+            registrarPacienteBtn.removeAttribute('disabled')
+        } else {
+            registrarPacienteBtn.setAttribute('disabled', 'true')
         }
     }
 
     //Verificar si todos los campos están completos
     verificarDatosCompletos() {
-        const inputs = this.formDatos.querySelectorAll('input');
-        let todosCompletos = true;
+        const inputs = this.formDatos.querySelectorAll('input')
+        let todosCompletos = true
 
         inputs.forEach(input => {
             if (input.value.trim() === '') {
-                todosCompletos = false;
+                todosCompletos = false
             }
         });
-
         return todosCompletos
     }
 
-    generarIdPaciente = () => {
-        const ids = datos.pacientes.map(objeto => Number(objeto.id))
-        const maximo = Math.max(...ids)
-        return maximo + 1
-    }
+    // Registrar un nuevo paciente
+    registrarPaciente = async () => {
+        try {
+            const pacienteACrear = {
+                id: turno.generarIdPaciente(),
+                nombre: document.getElementById("nombre").value,
+                apellido: document.getElementById("apellido").value,
+                documento: document.getElementById("documento").value,
+                fechaNacimiento: document.getElementById("fechaNacimiento").value,
+                obraSocial: document.getElementById("obraSocial").value,
+                turnos: []
+            };
 
-    registrarPaciente = () => {
-        const pacienteACrear = {
-            id: this.generarIdPaciente(),
-            nombre: document.getElementById("nombre").value,
-            apellido: document.getElementById("apellido").value,
-            documento: document.getElementById("documento").value,
-            fechaNacimiento: document.getElementById("fechaNacimiento").value,
-            obraSocial: document.getElementById("obraSocial").value,
-            turnos: []
+            datos.pacientes.push(pacienteACrear);
 
+            // Guardar datos en el localStorage
+            try {
+                await jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
+                logAlertManager.agregarLog(`Datos del paciente actualizados en localStorage`)
+                await logAlertManager.alertMensaje('¡Paciente registrado con éxito!')
+                domManager.reinicio()
+            } catch (error) {
+                throw error
+            }
+
+
+        } catch (error) {
+            await logAlertManager.alertError(`Error al registar el nuevo paciente: ${error.message}.`)
         }
-        datos.pacientes.push(pacienteACrear) //Agrega el nuevo paciente al array de datos (simula API)
-        //return new Paciente(pacienteACrear)
-        domManager.actualizarAyuda(`Datos del paciente actualizados en localStorage`)
-        alert('¡Paciente registrado con éxito!')
-        configuracion.reinicio()
     }
 
-    cancelarPaciente = () => {
+    // Botón cancelar 
+    cancelar = () => {
         this.borrarInputs(this.formDatos)
-        configuracion.reinicio()
-    }
-
-    //Agregar texto al cuadro de ayuda
-    actualizarAyuda = (texto) => {
-        const fechaHoraActual = utilidades.obtenerFechaYHoraActual()
-        this.ayuda.innerHTML = `${fechaHoraActual} ==> ${texto}<br>${this.ayuda.innerHTML}`
+        domManager.reinicio()
     }
 
     mostrarElemento = (id) => {
@@ -275,6 +292,10 @@ class DomManager {
 
     ocultarElemento = (id) => {
         id.style.display = 'none'
+    }
+
+    deshabilitarElemento = (id) => {
+        id.disabled = true
     }
 
     borrarInputs = (id) => {
@@ -302,32 +323,21 @@ class DomManager {
     }
 }
 
-class Paciente {
-    constructor(paciente) {
-        this.id = paciente.id
-        this.nombre = paciente.nombre
-        this.apellido = paciente.apellido
-        this.fechaNacimiento = paciente.fechaNacimiento
-        this.documento = paciente.documento
-        this.obraSocial = paciente.obraSocial
-        this.turnos = paciente.turnos || []
-    }
-
-    actualizarDatos = (nombre, apellido, fechaNacimiento, documento, obraSocial) => {
-        this.nombre = nombre
-        this.apellido = apellido
-        this.fechaNacimiento = fechaNacimiento
-        this.documento = documento
-        this.obraSocial = obraSocial
-    }
-
-
-}
 
 class Turnos {
 
     constructor() {
         this.paciente = null
+    }
+
+    generarIdPaciente = async () => {
+        try {
+            const ids = datos.pacientes.map(objeto => Number(objeto.id))
+            const maximo = Math.max(...ids)
+            return maximo + 1
+        } catch (error) {
+            await logAlertManager.alertError(`Error al generar ID del nuevo paciente: ${error.message}.`)
+        }
     }
 
     //Validad si el paciente existe según número de documento
@@ -342,29 +352,20 @@ class Turnos {
         try {
             this.paciente = await this.validarPaciente(documento)
 
-            //Si el paciente existe voy a generar turno
+            //Generar turno si el paciente existe
             if (typeof this.paciente === 'object') {
-                const pacienteNombre = `${this.paciente.nombre} ${this.paciente.apellido}`
                 domManager.generarFormulario(this.paciente)
-                domManager.ocultarElemento(registrarPacienteBtn)
-                domManager.mostrarElemento(formTurno)
-                domManager.mostrarElemento(reservarBtn)
-                domManager.actualizarAyuda(`Datos del paciente ${pacienteNombre} leídos correctamente del localStorage`)
-                logManager.addLog(`Inicio de turnos para el paciente ${pacienteNombre}`)
+                await logAlertManager.agregarLog(`Datos del paciente ${this.paciente.nombre} ${this.paciente.apellido} leídos correctamente del localStorage`)
+                await logAlertManager.agregarLog(`Inicio de turnos para el paciente ${this.paciente.nombre} ${this.paciente.apellido}`)
 
-                //Si no existe voy a crear paciente
+                //Si no existe, darlo de alta
             } else {
-                alert(`El paciente con documento ${documento} no existe. Aquí se abre el módulo de alta de pacientes (en la próxima entrega)`)
-                domManager.habilitarInputs(formDatos)
-                domManager.mostrarElemento(formDatos)
-                domManager.mostrarElemento(cancelarPacienteBtn)
-                domManager.mostrarElemento(registrarPacienteBtn)
-                domManager.registrarPacienteBtn.disabled = true
-
-
+                domManager.habilitarRegistroPaciente(documento)
+                await logAlertManager.alertMensaje(`El paciente con documento ${documento} no existe. Seguidamente podrás darte de alta.`)
+                await logAlertManager.agregarLog(`Inicio de alta para el paciente con documento ${documento}`)
             }
         } catch (error) {
-            console.error("Error al validar paciente:", error)
+            await logAlertManager.alertError(`Error al iniciar turnos: ${error.message}.`)
         }
     }
 
@@ -372,33 +373,31 @@ class Turnos {
     solicitarTurno = async (idMedico, idTurno) => {
         //Agregar en el array turnos del paciente el turno solicitado
         datos.pacientes.find(p => p.id === this.paciente.id).turnos.push({ "idMedico": idMedico, "idTurno": idTurno })
-        //marca como no disponible el turno solicitado en el array de turnos del médico
+        //Marcar como no disponible el turno solicitado en el array de turnos del médico
         datos.turnosDisponibles[idMedico].find(t => t.id == idTurno).disponible = false
-        //Mostrar en cuadro de ayuda
+        //Log
         const pacienteNombre = `${this.paciente.nombre} ${this.paciente.apellido}`
-        domManager.actualizarAyuda(`Turno para el paciente ${pacienteNombre} correctamente agendado`)
+        logAlertManager.agregarLog(`Turno para el paciente ${pacienteNombre} correctamente agendado`)
 
         try {
             //Guardar en localStorage los cambios
             await jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
-            domManager.actualizarAyuda(`Datos actualizados en localStorage`)
-            alert('¡Turno confirmado con éxito!')
-            //Volver al inicio
-            configuracion.reinicio()
+            logAlertManager.agregarLog(`Datos actualizados en localStorage`)
+            return true
         } catch (error) {
-            console.error("Error al guardar datos en localStorage:", error)
+            logAlertManager.alertError(`Error al guardar datos en localStorage: ${error.message}.`)
         }
     }
 }
+
 //---GLOBALES E INICIO---//
 
 let datos
 
-const configuracion = new Configuracion()
 const utilidades = new Utilidades()
 const jsonManager = new JsonManager()
-const logManager = new LogManager('../data/logs.txt')
+const logAlertManager = new LogAlertManager()
 const domManager = new DomManager()
 const turno = new Turnos()
 
-configuracion.inicio()
+domManager.inicio()

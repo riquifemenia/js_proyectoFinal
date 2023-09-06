@@ -138,6 +138,17 @@ img {
     }
 }
 
+.boton--cancelar {
+    @extend .boton;
+    border-color: map-get($color, $key: 6);
+    background-color: map-get($color, $key: 5);
+
+    &:hover {
+        border-color: map-get($color, $key: 6);
+        background-color: map-get($color, $key: 4);
+    }
+}
+
 .secciones {
     height: auto;
     font-style: normal;

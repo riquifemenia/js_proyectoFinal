@@ -1,32 +1,28 @@
 // Lectura y escritura en JSON y localStore
 
 class JsonManager {
-
-    obtenerDatos = async () => {
-        // Llamar al método para leer el archivo JSON
-        return this.leerArchivoJSON('../data/datos.json')
+    constructor() {
     }
 
-    // Método asincrónico para leer un archivo JSON desde una URL
+    obtenerDatos = async () => {
+        try {
+            // Llamar al método para leer el archivo JSON
+            return await this.leerArchivoJSON('../data/datos.json')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Leer un archivo JSON desde una URL
     leerArchivoJSON = async (url) => {
         try {
             const response = await fetch(url)
             if (!response.ok) {
-                throw new Error(`Error al cargar el archivo JSON en ${url}`)
+                throw new Error(`Error al cargar el archivo JSON en ${url}.`)
             }
-            const data = await response.json()
-            return data
+            return await response.json()
         } catch (error) {
-            throw new Error(`Error al leer el archivo JSON en ${url}: ${error.message}`)
-        }
-    }
-
-    // Guardar un valor en el localStorage
-    guardarEnLocalStorage = async (clave, valor) => {
-        try {
-            localStorage.setItem(clave, valor)
-        } catch (error) {
-            throw new Error(`Error al guardar en localStorage: ${error.message}`)
+            throw error
         }
     }
 
@@ -36,7 +32,16 @@ class JsonManager {
         if (valor !== null) {
             return valor
         } else {
-            throw new Error(`El valor para la clave '${clave}' no existe en localStorage`)
+            throw new Error(`El valor para la clave '${clave}' no existe en localStorage: ${error.message}.`)
+        }
+    }
+
+    // Guardar un valor en el localStorage
+    guardarEnLocalStorage = async (clave, valor) => {
+        try {
+            localStorage.setItem(clave, valor)
+        } catch (error) {
+            throw new Error(`Error al guardar en localStorage: ${error.message}. Comunicate con el administrador del sitio.`)
         }
     }
 }
