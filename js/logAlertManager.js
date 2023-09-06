@@ -120,13 +120,13 @@ class LogAlertManager {
             className: 'toast__custom ',
             text: texto,
             gravity: "top",
-            position: "right",
+            position: "left",
             stopOnFocus: true,
             duration: 4000,
             close: true,
             offset: {
                 x: '15rem',
-                y: '30rem',
+                y: '16rem',
             },
         })
 
