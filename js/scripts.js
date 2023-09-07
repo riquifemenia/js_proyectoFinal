@@ -154,21 +154,21 @@ class DomManager {
     // Actualiza lista de horarios de acuerdo al medico seleccionado
     actualizarHorarios = async () => {
         let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
-        const medicoSeleccionado = this.medicosSelect.value;
+        const medicoSeleccionado = this.medicosSelect.value
 
         if (medicoSeleccionado in datos.turnosDisponibles) {
             const listaDeTurnos = datos.turnosDisponibles[medicoSeleccionado]
             const horariosOptions = listaDeTurnos
                 .filter(turno => turno.disponible)
                 .map(turno => `<option value="${turno.id}">${utilidades.darFormatoFecha(turno.fecha)} ${turno.hora}</option>`)
-                .join('');
+                .join('')
 
-            this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>' + horariosOptions;
+            this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>' + horariosOptions
             this.horariosSelect.disabled = false
         } else {
             this.logAlertManager(`El médico seleccionado no tiene actualmente turnos disponibles`)
             this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>'
-            this.horariosSelect.disabled = true;
+            this.horariosSelect.disabled = true
         }
     }
 
@@ -233,7 +233,7 @@ class DomManager {
             if (input.value.trim() === '') {
                 todosCompletos = false
             }
-        });
+        })
         return todosCompletos
     }
 
@@ -242,7 +242,7 @@ class DomManager {
         let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         try {
             const pacienteACrear = {
-                id: paciente.generarIdPaciente(),
+                id: await paciente.generarIdPaciente(),
                 nombre: document.getElementById("nombre").value,
                 apellido: document.getElementById("apellido").value,
                 documento: document.getElementById("documento").value,
@@ -301,7 +301,6 @@ class DomManager {
     }
 }
 
-
 class Turno {
 
     constructor() {
@@ -338,15 +337,15 @@ class Turno {
 
             //buscar el array de turnos del paciente ingresado
             const paciente = datos.pacientes.find(paciente => paciente.documento === dni)
-            const turnos = paciente.turnos;
+            const turnos = paciente.turnos
 
             // Recorrer el array de turnos del paciente y armar el array de turnos asignados segun idMedico e idTurno
             for (const turno of turnos) {
-                const medico = datos.medicos.find(medico => medico.id == turno.idMedico);
+                const medico = datos.medicos.find(medico => medico.id == turno.idMedico)
                 const fechaTurno = utilidades.darFormatoFecha(datos.turnosDisponibles[turno.idMedico].find(t => t.id == turno.idTurno)?.fecha)
-                const horaTurno = datos.turnosDisponibles[turno.idMedico].find(t => t.id == turno.idTurno)?.hora;
-                const especialidad = medico.especialidad;
-                const nombreMedico = `${medico.nombre} ${medico.apellido}`;
+                const horaTurno = datos.turnosDisponibles[turno.idMedico].find(t => t.id == turno.idTurno)?.hora
+                const especialidad = medico.especialidad
+                const nombreMedico = `${medico.nombre} ${medico.apellido}`
 
                 turnosAsignados.push(`<p>Médico: ${nombreMedico} / Especialidad: ${especialidad}<br>Fecha: ${fechaTurno} Hora: ${horaTurno}</p>`)
             }

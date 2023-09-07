@@ -3,7 +3,7 @@ import Utilidades from './utilidades.js'
 class LogAlertManager {
     constructor() {
         this.utilidades = new Utilidades()
-        this.logs = [];
+        this.logs = []
     }
 
     async agregarLog(texto) {
@@ -112,4 +112,4 @@ class LogAlertManager {
     }
 }
 
-export default LogAlertManager;
+export default LogAlertManager

@@ -21,4 +21,5 @@
 
 ## Nota para uso y pruebas
 
-Los documentos de los pacientes registrados son: 12345678, 23456789, 34567890, 45678901, 56789012, 67890123
+- Los documentos de los pacientes registrados son: 12345678, 23456789, 34567890, 45678901, 56789012, 67890123.
+- En esta versión educativa, el log de transacciones se muestra por pantalla en popups.

@@ -11,6 +11,7 @@ class Paciente {
 
     generarIdPaciente = async () => {
         try {
+            let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
             const ids = datos.pacientes.map(objeto => Number(objeto.id))
             const maximo = Math.max(...ids)
             return maximo + 1
@@ -28,7 +29,7 @@ class Paciente {
     }
 
     registrarPaciente = async (datos, pacienteACrear) => {
-        datos.pacientes.push(pacienteACrear);
+        datos.pacientes.push(pacienteACrear)
 
         // Guardar datos en el localStorage
         try {
