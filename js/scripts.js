@@ -1,19 +1,3 @@
-//INCLUYE
-// Uso de clases
-// Interacciòn con el DOM
-// Bloque TRY-CATCH
-// Funciones asíncronas e interacción con un archivo JSON
-// Uso de localStorage
-// Uso de la clase Date para el manejo de fechas
-
-//Nota para uso: documentos de pacientes ya resgistrados: 12345678, 23456789, 34567890, 45678901, 56789012, 67890123
-
-
-// FALTA PARA ENTREGA FINAL
-// Módulos alta de paciente y consultas de turnos ya agendados
-// Revisión de manejo de todos los errores
-// Alerts "bonitos"
-// Ajuste de la vista html
 
 import Utilidades from './utilidades.js'
 import JsonManager from './jsonManager.js'
@@ -60,7 +44,7 @@ class DomManager {
 
         try {
             // Obtener datos y guardar en el localStorage
-            datos = await jsonManager.obtenerDatos()
+            let datos = await jsonManager.obtenerDatos()
             await jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
             logAlertManager.agregarLog('Datos leídos de archivo JSON y cargados el localStore')
 
@@ -99,7 +83,7 @@ class DomManager {
 
         try {
             // Leer datos desde el localStorage
-            datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
+            let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
             logAlertManager.agregarLog('Datos leídos desde localStore')
 
             // Mostrar los pacientes registrados en el cuadro de ayuda
@@ -139,7 +123,8 @@ class DomManager {
     }
 
     //Formar select de especialidades
-    generarOpcionesEspecialidades = () => {
+    generarOpcionesEspecialidades = async () => {
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         const especialidades = new Set()
 
         datos.medicos.forEach(medico => {
@@ -155,6 +140,7 @@ class DomManager {
 
     // Actualiza lista de medicos de acuerdo a la especialidad seleccionada
     actualizarMedicos = async () => {
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         const especialidadSeleccionada = this.especialidadesSelect.value
         const medicosOptions = datos.medicos
             .filter(medico => medico.especialidad === especialidadSeleccionada)
@@ -167,6 +153,7 @@ class DomManager {
 
     // Actualiza lista de horarios de acuerdo al medico seleccionado
     actualizarHorarios = async () => {
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         const medicoSeleccionado = this.medicosSelect.value;
 
         if (medicoSeleccionado in datos.turnosDisponibles) {
@@ -179,7 +166,7 @@ class DomManager {
             this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>' + horariosOptions;
             this.horariosSelect.disabled = false
         } else {
-            alert(`El médico seleccionado no tiene actualmente turnos disponibles`)
+            this.logAlertManager(`El médico seleccionado no tiene actualmente turnos disponibles`)
             this.horariosSelect.innerHTML = '<option value="" disabled selected>Seleccioná un horario</option>'
             this.horariosSelect.disabled = true;
         }
@@ -219,6 +206,7 @@ class DomManager {
 
     habilitarRegistroPaciente = (documento) => {
         this.habilitarInputs(this.formDatos)
+        this.borrarInputs(this.formDatos)
         this.mostrarElemento(this.formDatos)
         this.mostrarElemento(this.cancelarPacienteBtn)
         this.mostrarElemento(this.registrarPacienteBtn)
@@ -251,30 +239,20 @@ class DomManager {
 
     // Registrar un nuevo paciente
     registrarPaciente = async () => {
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         try {
             const pacienteACrear = {
-                id: turno.generarIdPaciente(),
+                id: paciente.generarIdPaciente(),
                 nombre: document.getElementById("nombre").value,
                 apellido: document.getElementById("apellido").value,
                 documento: document.getElementById("documento").value,
                 fechaNacimiento: document.getElementById("fechaNacimiento").value,
                 obraSocial: document.getElementById("obraSocial").value,
                 turnos: []
-            };
-
-            datos.pacientes.push(pacienteACrear);
-
-            // Guardar datos en el localStorage
-            try {
-                await jsonManager.guardarEnLocalStorage('datos', JSON.stringify(datos))
-                logAlertManager.agregarLog(`Datos del paciente actualizados en localStorage`)
-                await logAlertManager.alertMensaje('¡Paciente registrado con éxito!')
-                domManager.reinicio()
-            } catch (error) {
-                throw error
             }
 
-
+            await paciente.registrarPaciente(datos, pacienteACrear)
+            domManager.reinicio()
         } catch (error) {
             await logAlertManager.alertError(`Error al registar el nuevo paciente: ${error.message}.`)
         }
@@ -324,36 +302,19 @@ class DomManager {
 }
 
 
-class Turnos {
+class Turno {
 
     constructor() {
         this.paciente = null
     }
 
-    generarIdPaciente = async () => {
-        try {
-            const ids = datos.pacientes.map(objeto => Number(objeto.id))
-            const maximo = Math.max(...ids)
-            return maximo + 1
-        } catch (error) {
-            await logAlertManager.alertError(`Error al generar ID del nuevo paciente: ${error.message}.`)
-        }
-    }
-
-    //Validad si el paciente existe según número de documento
-    validarPaciente = async (documento) => {
-        documento = documento.toUpperCase()
-        datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
-        const pacienteSeleccionado = datos.pacientes.find(paciente => paciente.documento === documento)
-        return pacienteSeleccionado ? new Paciente(pacienteSeleccionado) : documento
-    }
-
     inicioTurnos = async (documento) => {
         try {
-            this.paciente = await this.validarPaciente(documento)
+            this.paciente = await paciente.validarPaciente(documento)
 
             //Generar turno si el paciente existe
-            if (typeof this.paciente === 'object') {
+            if (this.paciente) {
+                await this.consultarTurnosAsignados(this.paciente.documento)
                 domManager.generarFormulario(this.paciente)
                 await logAlertManager.agregarLog(`Datos del paciente ${this.paciente.nombre} ${this.paciente.apellido} leídos correctamente del localStorage`)
                 await logAlertManager.agregarLog(`Inicio de turnos para el paciente ${this.paciente.nombre} ${this.paciente.apellido}`)
@@ -369,9 +330,44 @@ class Turnos {
         }
     }
 
+    consultarTurnosAsignados = async (dni) => {
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
+        try {
+            //
+            let turnosAsignados = []
+
+            //buscar el array de turnos del paciente ingresado
+            const paciente = datos.pacientes.find(paciente => paciente.documento === dni)
+            const turnos = paciente.turnos;
+
+            // Recorrer el array de turnos del paciente y armar el array de turnos asignados segun idMedico e idTurno
+            for (const turno of turnos) {
+                const medico = datos.medicos.find(medico => medico.id == turno.idMedico);
+                const fechaTurno = utilidades.darFormatoFecha(datos.turnosDisponibles[turno.idMedico].find(t => t.id == turno.idTurno)?.fecha)
+                const horaTurno = datos.turnosDisponibles[turno.idMedico].find(t => t.id == turno.idTurno)?.hora;
+                const especialidad = medico.especialidad;
+                const nombreMedico = `${medico.nombre} ${medico.apellido}`;
+
+                turnosAsignados.push(`<p>Médico: ${nombreMedico} / Especialidad: ${especialidad}<br>Fecha: ${fechaTurno} Hora: ${horaTurno}</p>`)
+            }
+
+            if (turnosAsignados.length > 0) {
+                // Si hay turnos mostrar la lista
+                return logAlertManager.alertMensaje(`<p>¡Hola ${paciente.nombre}! Hasta el momento tenés agendados los siguientes turnos:<p>${turnosAsignados.join('\n')}`)
+            } else {
+                // Si no hay turnos mostrar mensaje
+                return logAlertManager.alertMensaje(`<p>¡Hola ${paciente.nombre}! Hasta el momento no tenés turnos agendados<p>`)
+            }
+
+        } catch (error) {
+            await logAlertManager.alertError(`Error al consultar turnos existentes: ${error.message}.`)
+        }
+    }
+
     // Solicitar un nuevo turno
     solicitarTurno = async (idMedico, idTurno) => {
         //Agregar en el array turnos del paciente el turno solicitado
+        let datos = JSON.parse(await jsonManager.leerDesdeLocalStorage('datos'))
         datos.pacientes.find(p => p.id === this.paciente.id).turnos.push({ "idMedico": idMedico, "idTurno": idTurno })
         //Marcar como no disponible el turno solicitado en el array de turnos del médico
         datos.turnosDisponibles[idMedico].find(t => t.id == idTurno).disponible = false
@@ -390,14 +386,13 @@ class Turnos {
     }
 }
 
-//---GLOBALES E INICIO---//
-
-let datos
+//--- INICIO---//
 
 const utilidades = new Utilidades()
 const jsonManager = new JsonManager()
 const logAlertManager = new LogAlertManager()
 const domManager = new DomManager()
-const turno = new Turnos()
+const turno = new Turno()
+const paciente = new Paciente()
 
 domManager.inicio()

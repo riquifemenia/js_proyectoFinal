@@ -1,6 +1,11 @@
 //Utilidades varias
 
 class Utilidades {
+
+    constructor() {
+        this.luxon = luxon.DateTime
+    }
+
     obtenerFechaYHoraActual = () => {
         const fechaHoraActual = new Date()
 
@@ -17,14 +22,15 @@ class Utilidades {
     }
 
     darFormatoFecha = (texto) => {
-        const fecha = new Date(texto)
+        const fecha = this.luxon.fromISO(texto);
 
-        const dia = fecha.getDate()
-        const mes = fecha.getMonth() + 1
-        const año = fecha.getFullYear()
+        const diaSemana = fecha.setLocale('es').toFormat('cccc');
+        const dia = fecha.day;
+        const mes = fecha.month;
+        const año = fecha.year;
 
-        const fechaFormateada = `${dia}/${mes}/${año}`
-        return fechaFormateada
+        const fechaFormateada = `${diaSemana} ${dia}/${mes}/${año}`;
+        return fechaFormateada;
     }
 }
 

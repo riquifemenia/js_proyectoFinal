@@ -213,12 +213,12 @@ img {
     background-color: #E9E9E9 !important; }
 
 .toast__custom {
-  background: #A495B7 !important;
+  background: #777777 !important;
   opacity: 0.9 !important;
   width: 300px;
   font-size: 15px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
   margin: 10px;
   color: #F0F0F0;
   padding: 10px; }

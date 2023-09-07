@@ -4,36 +4,14 @@ class LogAlertManager {
     constructor() {
         this.utilidades = new Utilidades()
         this.logs = [];
-        //this.filename = filename;
     }
 
     async agregarLog(texto) {
-        // this.logs.push(log);
-        // this.writeLogsToFile();
 
         const fechaHoraActual = this.utilidades.obtenerFechaYHoraActual()
-        let log = `${fechaHoraActual} ==> ${texto}`
-        console.log(log)
+        let log = `LOG:\n${fechaHoraActual} ==> ${texto}`
+        this.alertConsejo(log)
     }
-
-    // async writeLogsToFile() {
-    //     const logString = this.logs.join('\n');
-
-    //     try {
-    //         const response = await fetch(`/writeLogs?filename=${encodeURIComponent(this.filename)}`, {
-    //             method: 'POST',
-    //             body: logString
-    //         });
-
-    //         if (response.ok) {
-    //             console.log('Logs written to', this.filename);
-    //         } else {
-    //             console.error('Error writing logs to file:', response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error writing logs to file:', error);
-    //     }
-    // }
 
     async alertConfirmacion(texto) {
         texto = `${texto}`
@@ -120,13 +98,13 @@ class LogAlertManager {
             className: 'toast__custom ',
             text: texto,
             gravity: "top",
-            position: "left",
+            position: "right",
             stopOnFocus: true,
-            duration: 4000,
+            duration: 12000,
             close: true,
             offset: {
-                x: '15rem',
-                y: '16rem',
+                x: '4rem',
+                y: '4rem',
             },
         })
 
